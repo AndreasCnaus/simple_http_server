@@ -4,7 +4,7 @@ import sqlite3
 
 def main():
     # Connect to the SQLite Database
-    conn = sqlite3.connect("tracker_board.db")
+    conn = sqlite3.connect("build/tracker_board.db")
 
     # Read the entire table into a DataFrame
     df = pd.read_sql_query("SELECT * FROM gps_data", conn)
