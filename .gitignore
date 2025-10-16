@@ -3,3 +3,6 @@
 
 # Ignore the gpsenv directory
 gpsenv/
+
+# Ignore build directory
+build/
