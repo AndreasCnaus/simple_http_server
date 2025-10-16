@@ -1,0 +1,5 @@
+# Ignore Vs Code settings directory
+.vscode/
+
+# Ignore the gpsenv directory
+gpsenv/
