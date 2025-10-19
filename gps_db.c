@@ -4,7 +4,6 @@
 
 int db_init(const char *db_name, const char *table_name, sqlite3 **db)
 {
-    
     int rc = db_open(db_name, db);
     if (rc) return rc;
 

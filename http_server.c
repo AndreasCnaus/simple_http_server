@@ -1,5 +1,5 @@
 /*
-    server.c -- a stream socket based server
+    http_server.c -- a stream socket based server
 */
 
 #include <stdio.h>

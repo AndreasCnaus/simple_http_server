@@ -2,7 +2,7 @@
 #define GPS_PACK_H_
 
 #include "gps_pack.h"
-#include "pack.h" // your existing varargs-based pack/unpack functions
+#include "pack.h"
 #include <stdint.h>
 
 #define GPS_PACKET_SIZE     18

@@ -1,8 +1,7 @@
 #include "gps_pack.h"
-#include "pack.h" // your existing varargs-based pack/unpack functions
+#include "pack.h"
 
 uint32_t pack_gps(uint8_t *buf, gps_data_t *data) {
-    // "ddCCCCCCHH" — example format string
     return pack(buf, "ddCCCCCCHH",
                 data->latitude,
                 data->longitude,
