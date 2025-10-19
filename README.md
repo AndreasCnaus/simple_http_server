@@ -4,7 +4,7 @@ A **lightweight and custom-built HTTP server** designed to receive, parse, and s
 
 ---
 
-## Key Features
+## Key Features 🚀
 
 * **Custom HTTP Implementation:** Built from the ground up on a **TCP socket** (written in C) for educational purposes and minimal overhead.
 * **Concurrency:** Utilizes the **`fork()`** system call to handle each client connection in a separate process.
@@ -16,7 +16,7 @@ A **lightweight and custom-built HTTP server** designed to receive, parse, and s
 
 ## Technology and Architecture 💻
 
-This project is a complete pipeline utilizing a mix of foundational and modern tools:
+This project is a complete data pipeline utilizing a mix of foundational and modern tools:
 
 * **Backend Server:** **C** (POSIX Sockets) for a low-level, high-performance TCP server.
 * **Concurrency:** Uses the **`fork()`** system call for parallel client handling.
@@ -96,8 +96,8 @@ It is **highly recommended** to use a Python **virtual environment** to install 
 
 1.  **Create and Activate Virtual Environment:**
     ```bash
-    # Create the environment 
-    python -m venv venv 
+    # Create the environment (use 'python3' or 'py -3' for clarity)
+    python3 -m venv venv 
     
     # Activate the environment (Linux/macOS)
     source venv/bin/activate 
@@ -117,3 +117,11 @@ It is **highly recommended** to use a Python **virtual environment** to install 
     python plot_data.py
     ```
     This will open the interactive map in your default web browser.
+
+---
+
+## Reference
+
+The fundamental C socket and network utility implementations were guided by:
+
+* **Beej's Guide to Network Programming:** [https://beej.us/guide/bgnet/](https://beej.us/guide/bgnet/)
