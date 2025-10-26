@@ -1,7 +1,6 @@
 #ifndef GPS_PACK_H_
 #define GPS_PACK_H_
 
-#include "gps_pack.h"
 #include "pack.h"
 #include <stdint.h>
 
