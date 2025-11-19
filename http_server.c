@@ -29,7 +29,13 @@
 
 // GPS Data Storage
 #define GPS_BUFFER_COUNT    60       // Number of GPS samples to store in memory (1 sample/sec for 1 minute)
-gps_data_t gps_buffer[GPS_BUFFER_COUNT];
+
+typedef struct {
+    gps_data_t entries[GPS_BUFFER_COUNT];
+    uint16_t num_of_entries;
+}GpsBuffer_t;
+
+GpsBuffer_t gps_buffer;
 
 // -- Forward declarations -- 
 void sigchld_handler(int s);
@@ -42,7 +48,7 @@ void send_404(int fd);
 int handle_post_request(unsigned char *data, int len);
 int handle_http_request(int fd, unsigned char *header_buf, unsigned char *body_buf, int body_len);
 int recv_http_request(int fd, unsigned char *header_buf, unsigned char **body_out);
-int write_gpsdata_to_db(sqlite3 *db, const char *table_name, gps_data_t *gps_buf);
+int write_gpsdata_to_db(sqlite3 *db, const char *table_name, GpsBuffer_t *gps_buf);
 
 void sigchld_handler(int s)
 {
@@ -100,12 +106,14 @@ void send_404(int fd)
 int handle_post_request(unsigned char *data, int len)
 {
     gps_data_t gps_data;
+    gps_buffer.num_of_entries = 0;
     int n = 0;
-
+    
     for (int i = 0; i < len; i += GPS_PACKET_SIZE) {
         unpack_gps(data + i, &gps_data);
         if (n < GPS_BUFFER_COUNT) {
-            gps_buffer[n++] = gps_data;
+            gps_buffer.entries[n++] = gps_data;
+            gps_buffer.num_of_entries++;
         } else {
             printf("Error: GPS buffer full!\n");
             // ToDo: handle the overflow 
@@ -113,7 +121,8 @@ int handle_post_request(unsigned char *data, int len)
         }
 
         // print the data
-        
+        /*
+
         printf("Latitude: %.12f\n", gps_data.latitude);
         printf("Longitude: %.12f\n", gps_data.longitude);
         printf("Date: 20%02u-%02u-%02u %02u:%02u:%02u\n",
@@ -122,6 +131,9 @@ int handle_post_request(unsigned char *data, int len)
         printf("Altitude: %u m\n", gps_data.altitude);
         printf("Speed: %.2f km/h\n", (float)(gps_data.speed/100.0));
         printf("\n");
+        
+        */
+
         
     }  
     
@@ -228,11 +240,17 @@ int recv_http_request(int fd, unsigned char *header_buf, unsigned char **body_ou
     return already;
 }
 
-int write_gpsdata_to_db(sqlite3 *db, const char *table_name, gps_data_t *gps_buf)
+int write_gpsdata_to_db(sqlite3 *db, const char *table_name, GpsBuffer_t *gps_buf)
 {
+    // Check input parameter
+    if (gps_buf == NULL) {
+        fprintf(stderr, "Failed to write GPS data to database. Invalid input parameter\n");
+        return -1; 
+    }
+
     int rc = 0;
-    for (int i = 0; i < GPS_BUFFER_COUNT; i++) {
-        gps_data_t gps = gps_buf[i];
+    for (int i = 0; i < gps_buf->num_of_entries; i++) {
+        gps_data_t gps = gps_buf->entries[i];
 
         // write GPS data into the database 
         rc += db_write_entry(db, table_name, gps.latitude, gps.longitude, 
@@ -366,7 +384,7 @@ int main(void)
            if (content_length > 0) {
                 rc = handle_http_request(new_fd, header_buf, body_buf, content_length);
                 if (rc == 0) {
-                    write_gpsdata_to_db(db, table_name, gps_buffer);
+                    write_gpsdata_to_db(db, table_name, &gps_buffer);
                 }
             } else {
                 fprintf(stderr, "Handling of partial or invalid HTTP body is not supported\n");
